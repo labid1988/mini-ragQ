@@ -118,10 +118,14 @@ async def upload_data(request: Request, project_id: str, file: UploadFile,
     if not is_valid:
         raise HTTPException(status_code=400, detail=str(message))
 
-    project_model = ProjectModel(db_client=request.app.db_client)  # ✅ typo
+    project_model = await ProjectModel.create_instance(
+        db_client=request.app.db_client
+        )
+
     project = await project_model.get_project_or_create_one(project_id=project_id)
 
     project_dir_path = ProjectController().get_project_path(project_id=project_id)
+
     file_path, file_id = data_controller.generate_unique_filename(
         orig_file_name=file.filename,
         project_id=project_id
@@ -148,12 +152,16 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
     overlap_size = process_request.overlap_size
     do_reset= process_request.do_reset
 
-    project_model = ProjectModel(db_client=request.app.db_client)  # ✅ typo
+    project_model = await ProjectModel.create_instance(
+        db_client=request.app.db_client) 
+    
     project = await project_model.get_project_or_create_one(project_id=project_id)
 
     process_controller = ProcessController(project_id=project_id)
     file_content = process_controller.get_file_content(file_id=file_id)
+
     file_chunks = process_controller.process_file_content(
+        
         file_content=file_content,
         file_id=file_id,
         chunk_size=chunk_size,
@@ -173,7 +181,7 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
         for i, chunk in enumerate(file_chunks)
     ]
 
-    chunk_model = ChunkModel(
+    chunk_model = await ChunkModel.create_instance(
         db_client=request.app.db_client
         )
     

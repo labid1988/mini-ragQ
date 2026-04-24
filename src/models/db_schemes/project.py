@@ -31,13 +31,17 @@ class Project(BaseModel):
             raise ValueError('project_id must be alphanumeric')
         return value
 
-    class Config:                        # ✅ indenté dans la classe
-        arbitrary_types_allowed = True
+    # class Config:                        
+    #     arbitrary_types_allowed = True
+
+    model_config = {
+    "arbitrary_types_allowed": True,
+    "populate_by_name": True  # permet d'utiliser "id" ou "_id"
+}
 
 
     @classmethod
     def get_indexes(cls):
-
         return [
             {
                 "key":[

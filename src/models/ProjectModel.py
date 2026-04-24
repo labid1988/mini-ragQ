@@ -67,18 +67,18 @@ class ProjectModel(BaseDataModel):
             self.collection = self.db_client[DataBaseEnum.COLLECTION_PROJECT_NAME.value] 
             indexes = Project.get_indexes()
             for index in indexes:
-                await self.collection.create_indexes()
-                for index in indexes:
+                await self.collection.create_index(
                     index["key"],
                     name = index["name"],
-                    unique = iondex["unque"]
+                    unique = index["unique"]
+                    )
 
     async def create_project(self, project: Project):
         #result = await self.collection.insert_one(project.dict(by_alais=true, exclude=True)) 
-        result = await self.collection.insert_one(project.model_dump(exclude={"id"})  # ✅ exclut id=None lors de l'insert
-    )
+        result = await self.collection.insert_one(project.model_dump(exclude={"id"}))
+
         project = Project(
-            id=result.inserted_id,          # ✅ reconstruit avec l'id MongoDB
+            id=result.inserted_id,         
             project_id=project.project_id
         )
         return project
