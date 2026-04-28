@@ -4,7 +4,7 @@ from bson import ObjectId
 
 class ProcessRequest(BaseModel):
     id: Optional[ObjectId] = Field(None, alias="_id") 
-    file_id:str
+    file_id:str = None
     chunk_size: Optional[int] = 100
     overlap_size: Optional[int] = 20
     do_reset: Optional[int] = 0

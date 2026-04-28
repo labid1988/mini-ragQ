@@ -3,12 +3,12 @@ from bson.objectid import ObjectId
 from typing import Optional
 
 class DataChunk(BaseModel):
-    _id: Optional[ObjectId]
+    id: Optional[ObjectId] = Field(default=None, alias="_id")
     chunk_text: str = Field(..., min_length=1)
-    #chunk_metadata= dict
     chunk_metadata: dict = Field(default_factory=dict)
     chunk_order: int = Field(..., gt=0)
     chunk_project_id: ObjectId
+    chunk_asset_id: ObjectId
 
     class Config:
         arbitrary_types_allowed = True
