@@ -35,6 +35,9 @@ class OpenAIProvider:
         self.embedding_model_id = model_id
         self.embedding_size = embedding_size
 
+    def process_text(self, text: str):
+        return text[self.default_input_max_characters].strip()
+
     def generate_text(self, prompt:str, chat_history: list=[], max_output_token:int, temperature:float=None):
        # raise NotImplementedError("generate_text method is not implemented yet.")
         if not self.client:
@@ -89,7 +92,7 @@ class OpenAIProvider:
     def construct_prompt(self, prompt: str, role: str):
         return {
             "role": role,
-            "content": prompt
+            "content": slef.process_text(prompt)
         }
 
     # def generate_text(self, prompt: str, input_max_characters: int = None, 
